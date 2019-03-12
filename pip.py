@@ -66,7 +66,7 @@ class Brew(dotbot.Plugin):
         if (self.X11):
             filename = data.get('file')
         else
-            filename = data.get('file-nox')
+            filename = data.get('file-nox') or data.get('file')
 
         if not filename:
             raise ValueError(message)
