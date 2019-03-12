@@ -23,8 +23,10 @@ class Brew(dotbot.Plugin):
     def can_handle(self, directive):
         return directive in self._supported_directives
 
+
     def handle(self, directive, data):
         data = self._maybe_convert_to_dict(data)
+        data = self._maybe_has_nox_file(data)
 
         try:
             self._do_requirements_exist(data)
@@ -42,6 +44,8 @@ class Brew(dotbot.Plugin):
 
     @property                                                                                                                                                          
     def X11(self):                                                                                                                                                     
+        return False
+
         if (os.environ.get('DISPLAY')):                                                                                                                                
             return True                                                                                                                                                
 
@@ -58,13 +62,18 @@ class Brew(dotbot.Plugin):
             return {'file': data}
         return data
 
+    def _maybe_has_nox_file(self, data):
+        """                                                                                                                                                            
+        Allow NOX requirement files if needed:
+        file-nox directive if environment is NO X
+        """                                                                                                                                                            
+        if (data.get('file-nox') and self.X11 == False):
+            data['file'] = data.get('file-nox')
+        return data
+
     def _do_requirements_exist(self, data):
         message = 'Requirements file does not exist.'
-        if (self.X11):
-            filename = data.get('file')
-        else:
-            filename = data.get('file-nox') or data.get('file')
-
+        filename = data.get('file')
         if not filename:
             raise ValueError(message)
 
