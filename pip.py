@@ -40,6 +40,20 @@ class Brew(dotbot.Plugin):
     def cwd(self):
         return self._context.base_directory()
 
+    @property                                                                                                                                                          
+    def X11(self):                                                                                                                                                     
+        if (os.environ.get('DISPLAY')):                                                                                                                                
+            return True                                                                                                                                                
+
+        # extra fallback
+        if (os.path.exists('/usr/bin/X')):                                                                                                                             
+            return True                                                                                                                                                
+
+        return False                                                                                                                                                   
+                                                                                                                                                                       
+    def __init__(self):                                                                                                                                                
+        print(self.X11)
+
     # Inner logic
 
     def _maybe_convert_to_dict(self, data):
@@ -49,7 +63,11 @@ class Brew(dotbot.Plugin):
 
     def _do_requirements_exist(self, data):
         message = 'Requirements file does not exist.'
-        filename = data.get('file')
+        if (self.X11):
+            filename = data.get('file')
+        else
+            filename = data.get('file-nox')
+
         if not filename:
             raise ValueError(message)
 
