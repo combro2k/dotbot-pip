@@ -65,7 +65,7 @@ class Brew(dotbot.Plugin):
         message = 'Requirements file does not exist.'
         if (self.X11):
             filename = data.get('file')
-        else
+        else:
             filename = data.get('file-nox') or data.get('file')
 
         if not filename:
