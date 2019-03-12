@@ -18,7 +18,7 @@ This plugin installs specified `requirements` file with the given `binary`.
 1. Run:
 
 ```bash
-git submodule add https://github.com/sobolevn/dotbot-pip.git
+git submodule add https://github.com/combro2k/dotbot-pip.git
 ```
 
 2. Modify your `./install` with new plugin directory:
