@@ -44,8 +44,6 @@ class Brew(dotbot.Plugin):
 
     @property                                                                                                                                                          
     def X11(self):                                                                                                                                                     
-        return False
-
         if (os.environ.get('DISPLAY')):                                                                                                                                
             return True                                                                                                                                                
 
