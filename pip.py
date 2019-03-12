@@ -51,9 +51,6 @@ class Brew(dotbot.Plugin):
 
         return False                                                                                                                                                   
                                                                                                                                                                        
-    def __init__(self):                                                                                                                                                
-        print(self.X11)
-
     # Inner logic
 
     def _maybe_convert_to_dict(self, data):
