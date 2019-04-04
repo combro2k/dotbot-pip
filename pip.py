@@ -44,7 +44,7 @@ class Brew(dotbot.Plugin):
 
     @property
     def X11(self):
-        if (os.environ.get('DISPLAY')) and (os.environ.get('XDG_SESSION_TYPE') != 'X11'):
+        if (os.environ.get('DISPLAY') and (os.environ.get('XDG_SESSION_TYPE') != 'X11')):
             return True
 
         # extra fallback
