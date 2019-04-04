@@ -42,17 +42,17 @@ class Brew(dotbot.Plugin):
     def cwd(self):
         return self._context.base_directory()
 
-    @property                                                                                                                                                          
-    def X11(self):                                                                                                                                                     
-        if (os.environ.get('DISPLAY')):                                                                                                                                
-            return True                                                                                                                                                
+    @property
+    def X11(self):
+        if (os.environ.get('DISPLAY')) and (os.environ.get('XDG_SESSION_TYPE') != 'X11'):
+            return True
 
         # extra fallback
-        if (os.path.exists('/usr/bin/X')):                                                                                                                             
-            return True                                                                                                                                                
+        if (os.path.exists('/usr/bin/X')):
+            return True
 
-        return False                                                                                                                                                   
-                                                                                                                                                                       
+        return False
+
     # Inner logic
 
     def _maybe_convert_to_dict(self, data):
@@ -61,10 +61,10 @@ class Brew(dotbot.Plugin):
         return data
 
     def _maybe_has_nox_file(self, data):
-        """                                                                                                                                                            
+        """
         Allow NOX requirement files if needed:
         file-nox directive if environment is NO X
-        """                                                                                                                                                            
+        """
         if (data.get('file-nox') and self.X11 == False):
             data['file'] = data.get('file-nox')
         return data
