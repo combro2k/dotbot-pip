@@ -151,7 +151,7 @@ class Brew(dotbot.Plugin):
             param = '--user'
 
         if parameters['system_site_packages'] and is_pipx:
-            param = '--system_site_packages'
+            param = '--system-site-packages'
 
         for req in requirements:
             if is_pipx and req.startswith('git+') or req.startswith('http'):
