@@ -159,8 +159,6 @@ class Brew(dotbot.Plugin):
 
             command = '{} install {} {}'.format(binary, param, req)
 
-            print(command)
-
             with open(os.devnull, 'w') as devnull:
                 result = subprocess.call(
                     command,
