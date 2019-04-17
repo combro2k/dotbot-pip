@@ -7,15 +7,19 @@ import dotbot
 class Brew(dotbot.Plugin):
     _pipsi_directive = 'pipsi'
     _default_binary = 'pip'
+    _pipx_directive = 'pipx'
 
     # Default outputs
     _default_stdout = False
     _default_stderr = False
+
+    _use_system_site_packages = False
     _use_user_directory = False
 
     _supported_directives = [
         'pip',  # it is not the same as default binary.
         _pipsi_directive,
+        _pipx_directive,
     ]
 
     # API methods
@@ -89,6 +93,9 @@ class Brew(dotbot.Plugin):
         if directive == self._pipsi_directive:
             return self._pipsi_directive
 
+        if directive == self._pipx_directive:
+            return self._pipx_directive
+
         return data.get('binary', self._default_binary)
 
     def _prepare_requirements(self, directive, data):
@@ -101,7 +108,7 @@ class Brew(dotbot.Plugin):
 
         And just return the file path with `-r` for `pip`.
         """
-        if directive == self._pipsi_directive:
+        if directive == self._pipsi_directive or directive == self._pipx_directive:
             with open(os.path.join(self.cwd, data['file'])) as r:
                 requirements = r.readlines()
 
@@ -125,6 +132,7 @@ class Brew(dotbot.Plugin):
         parameters = {
             'stdout': data.get('stdout', self._default_stdout),
             'stderr': data.get('stderr', self._default_stderr),
+            'system_site_packages': data.get('system-site-packages', self._use_system_site_packages),
             'user_directory': data.get('user', self._use_user_directory)
         }
         return parameters
@@ -135,14 +143,23 @@ class Brew(dotbot.Plugin):
         binary = self._get_binary(directive, data)
         requirements = self._prepare_requirements(directive, data)
         parameters = self._get_parameters(data)
-        is_pip = (directive != self._pipsi_directive)
+        is_pip = (directive == 'pip')
+        is_pipx = (directive == 'pipx')
 
         param = ''
         if parameters['user_directory'] and is_pip:
             param = '--user'
 
+        if parameters['system_site_packages'] and is_pipx:
+            param = '--system_site_packages'
+
         for req in requirements:
+            if is_pipx and req.startswith('git+') or req.startswith('http'):
+                param = '--spec' if param == '' else ('%s --spec' % param)
+
             command = '{} install {} {}'.format(binary, param, req)
+
+            print(command)
 
             with open(os.devnull, 'w') as devnull:
                 result = subprocess.call(

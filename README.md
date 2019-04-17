@@ -45,6 +45,15 @@ git submodule add https://github.com/combro2k/dotbot-pip.git
     stderr: true  # Print the execution stderr
 ```
 
+# Also supports pipx, make sure it appears after `pip`!
+
+- pipx:
+    file: requirements-pipx.txt
+    stdout: false # Print the execution stdout
+    stderr: true  # Print the execution stderr
+    system-site-packages: true # allow inclusion of system-site-pacakges in the enviroment
+```
+
 That's it!
 
 
