@@ -15,6 +15,8 @@ class Brew(dotbot.Plugin):
 
     _use_system_site_packages = False
     _use_user_directory = False
+    _use_force = False
+    _use_verbose = False
 
     _supported_directives = [
         'pip',  # it is not the same as default binary.
@@ -132,6 +134,8 @@ class Brew(dotbot.Plugin):
         parameters = {
             'stdout': data.get('stdout', self._default_stdout),
             'stderr': data.get('stderr', self._default_stderr),
+            'verbose': data.get('verbose', self._use_verbose),
+            'force': data.get('force', self._use_force),
             'system_site_packages': data.get('system-site-packages', self._use_system_site_packages),
             'user_directory': data.get('user', self._use_user_directory)
         }
@@ -147,17 +151,24 @@ class Brew(dotbot.Plugin):
         is_pipx = (directive == 'pipx')
 
         for req in requirements:
-            param = ''
+            param = []
+
+            if parameters['force']:
+                param.append('--force')
+
             if parameters['user_directory'] and is_pip:
-                param = '--user'
+                param.append('--user')
 
             if parameters['system_site_packages'] and is_pipx:
-                param = '--system-site-packages'
+                param.append('--system-site-packages')
 
             if is_pipx and req.startswith('git+') or req.startswith('http'):
-                param = '--spec' if param == '' else ('%s --spec' % param)
+                param.append('--spec')
 
-            command = '{} install {} {}'.format(binary, param, req)
+            command = '{} install {} {}'.format(binary, ' '.join(param), req)
+
+            if parameters['verbose']:
+                print(command)
 
             with open(os.devnull, 'w') as devnull:
                 result = subprocess.call(
