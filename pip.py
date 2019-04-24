@@ -146,18 +146,20 @@ class Brew(dotbot.Plugin):
         is_pip = (directive == 'pip')
         is_pipx = (directive == 'pipx')
 
-        param = ''
-        if parameters['user_directory'] and is_pip:
-            param = '--user'
-
-        if parameters['system_site_packages'] and is_pipx:
-            param = '--system-site-packages'
-
         for req in requirements:
+            param = ''
+            if parameters['user_directory'] and is_pip:
+                param = '--user'
+
+            if parameters['system_site_packages'] and is_pipx:
+                param = '--system-site-packages'
+
             if is_pipx and req.startswith('git+') or req.startswith('http'):
                 param = '--spec' if param == '' else ('%s --spec' % param)
 
             command = '{} install {} {}'.format(binary, param, req)
+
+            print(command)
 
             with open(os.devnull, 'w') as devnull:
                 result = subprocess.call(
