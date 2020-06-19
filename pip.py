@@ -162,8 +162,8 @@ class Brew(dotbot.Plugin):
             if parameters['system_site_packages'] and is_pipx:
                 param.append('--system-site-packages')
 
-            if is_pipx and req.startswith('git+') or req.startswith('http'):
-                param.append('--spec')
+            #if is_pipx and req.startswith('git+') or req.startswith('http'):
+            #    param.append('--spec')
 
             command = '{} install {} {}'.format(binary, ' '.join(param), req)
 
